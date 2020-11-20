@@ -72,11 +72,12 @@ int znajdz_przed(char kod_przed[100][10], student dane[100], int n) {
     return ile_znalazlem;
 }
 
-void przedmiot(student dane[100], int ile_rekordow) {
+void najlepszy_przedmiot(student dane[100], int ile_rekordow) {
+    
     char kod_przed[100][10];
     char nazwa_przed[100][10];
-    int ile_przed, i, pozycja, ile_dodawan[100] = { 0 }, najgorsza_pozycja, najlepsza_pozycja;
-    float srednia[100] = { 0 }, najgorsza = 6.0f, najlepsza = 0.0f;
+    int ile_przed, i, pozycja, ile_dodawan[100] = { 0 }, najlepsza_pozycja;
+    float srednia[100] = { 0 }, najlepsza = 0.0f;
 
     ile_przed = znajdz_przed(kod_przed, dane, ile_rekordow);
 
@@ -102,9 +103,31 @@ void przedmiot(student dane[100], int ile_rekordow) {
         //printf("najlepsza_pozycja: %d, dla i: %d\n", najlepsza_pozycja, i);
     }
 
-    printf("Nalepsza srednia: %s - %s: %.1f\n", kod_przed[najlepsza_pozycja], nazwa_przed[najlepsza_pozycja], srednia[najlepsza_pozycja]);
+    printf("Nalepsza srednia: %s - %s: %.1f\n", kod_przed[najlepsza_pozycja], nazwa_przed[najlepsza_pozycja], srednia[najlepsza_pozycja]);   
+}
+void najgorszy_przedmiot(student dane[100], int ile_rekordow){
+
+char kod_przed[100][10];
+    char nazwa_przed[100][10];
+    int ile_przed, i, pozycja, ile_dodawan[100] = { 0 }, najgorsza_pozycja;
+    float srednia[100] = { 0 }, najgorsza = 6.0f;
+
+ ile_przed = znajdz_przed(kod_przed, dane, ile_rekordow);
+
+    for (i = 0; i < ile_rekordow; i++) {
+        pozycja = znajdz(dane[i].kod_przed, kod_przed, ile_przed);
+        //printf("pozycja to %d, dla %d fora\n", pozycja, i+1);
+        strcpy(nazwa_przed[pozycja], dane[i].nazwa_przed);
+        ile_dodawan[pozycja]++;
+        srednia[pozycja] += dane[i].ocena;
+    }
 
     for (i = 0; i < ile_przed; i++) {
+        srednia[i] = srednia[i] / ile_dodawan[i];
+       // printf("%f\n", srednia[i]);
+    }
+
+ for (i = 0; i < ile_przed; i++) {
         if (najgorsza > srednia[i]) {
             najgorsza = srednia[i];
             najgorsza_pozycja = i;
@@ -121,5 +144,6 @@ int main(int argc, char** argv) {
     int ile;
     ile = wczytaj(dane, argv[1]);
 
-    przedmiot(dane, ile);
+    najlepszy_przedmiot(dane, ile);
+    najgorszy_przedmiot(dane, ile);
 }
